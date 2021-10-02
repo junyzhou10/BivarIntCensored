@@ -2,10 +2,10 @@
 #' @description This package provide a tookit which estimates the joint distribution function (as well as marginal distributions of each outcome) for interval-censored data using a spline-based sieve nonparametric MLE
 #' @param dat Observed interval-censored data which can be either case 1 (current status data) or case 2 (interval censored data) for either outcome. See details.
 #' @param l Order of I-spline (degree + 1). The default is \code{l=4}
-#' @param pred.times Input times using format, [T1, T2], to predict the probability of observing events marginally and jointly, i.e., [F1, F2, F12]. Multiple inputs of times are supported by providing a n x 2 matrix of times
+#' @param pred.times Input times using format [T1, T2] to predict the probability of observing events marginally and jointly, i.e., [F1, F2, F12]. Multiple inputs of times are supported by providing a n x 2 matrix of times
 #' @param int.k_1 User specified positions of knots for outcome 1. If not specified, \eqn{N^{1/3}} knots will be chosen at quantiles
 #' @param int.k_2 Similar to int.k_1, just for outcome 2
-#' @param Corr.Test Whether the test of correlation between two outcomes should be conducted. Default is FALSE. If TRUE, bootstrap will be adopted for the \eqn{SE(\rho)}.
+#' @param Corr.Test Whether the test of correlation between two outcomes should be conducted. Default is FALSE. If TRUE, bootstrap will be adopted to calculate \eqn{SE(\rho)}.
 #' @param nBootstrp Number of bootstrap samples
 #' @details \code{dat} should meet the following format: \cr
 #'     A list of two matrix with name 'T1' and 'T2'. Each one is a n x 3 matrix with first column for left boundaries of the observation interval, second column for right boundaries,
@@ -16,7 +16,7 @@
 #'     Else -> "Interval" censored \cr
 #' @return A list object including:
 #' \item{rho.hat}{The estimated \eqn{\rho}, implies the correlation between two outcomes. See reference papers for more details}
-#' \item{MC.rho}{If \code{Corr.Test = TRUE}, it yields a vector of all \eqn{\rho} from bootstraps}
+#' \item{MC.rho}{If \code{Corr.Test = TRUE}, it yields a vector of all estimated \eqn{\rho} from bootstraps}
 #' \item{seive.M_ij, seive.w_i, seive.p_j}{Estimated I-spline coefficients. See reference papers for more details}
 #' \item{F1.hat, F2.hat, F12.hat}{Estimated marginal and joint CDFs. They mainly used for making the plot of the CDFs}
 #' \item{Pred.Probs}{If \code{pred.times} is given, it contains the estimated [F1(T1), F2(T2), F12(T1,T2)] at given time points}
@@ -24,14 +24,21 @@
 #' @references Wu, Y., & Zhang, Y. (2012). Partially monotone tensor spline estimation of the joint distribution function with bivariate current status data. \emph{The Annals of Statistics, 40(3)}, 1609-1636.\cr \cr
 #'     Wu Y., Zhang, Y., & Zhou, J. \emph{Statistica Sinica Preprint No: SS-2019-0296}.
 #' @examples
-#' res = BiIntCensd(SampleDat_case2, Corr.Test = FALSE, pred.times = rbind(c(1,2), c(2,2.3)))
+#' res = BiIntCensd(SampleDat_case2,
+#'                  Corr.Test = FALSE,
+#'                  pred.times = rbind(c(1,2), c(2,2.3))
+#'                  )
 #'
 #' # making 3d plot of joint distribution
 #' # require(rgl)
-#' rgl::persp3d(res$F1.hat$T1, res$F2.hat$T2, res$F12.hat, xlab = 'T1', ylab = 'T2', zlab = 'F(T1, T2)',
+#' rgl::persp3d(res$F1.hat$T1, res$F2.hat$T2, res$F12.hat,
+#' xlab = 'T1', ylab = 'T2', zlab = 'F(T1, T2)',
 #' main='Joint CDF', col = "lightblue")
+#'
+#' # add points
 #' if (!is.null(res$Pred.Probs)) {
-#'     rgl::points3d(res$Pred.Probs$T1, res$Pred.Probs$T2, res$Pred.Probs$Est.F12, col = "red", add = TRUE)
+#'     rgl::points3d(res$Pred.Probs$T1, res$Pred.Probs$T2,
+#'     res$Pred.Probs$Est.F12, col = "red", add = TRUE)
 #' }
 #'
 #' @import splines2 CVXR utils grDevices graphics rgl
