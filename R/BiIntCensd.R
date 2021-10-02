@@ -35,7 +35,7 @@
 #' }
 #'
 #' @import splines2 CVXR utils grDevices graphics rgl
-#' @importFrom stats quantile rbinom rnorm runif
+#' @importFrom stats quantile runif rbinom rnorm pnorm sd
 #' @export
 
 BiIntCensd <- function(dat,
@@ -111,7 +111,10 @@ BiIntCensd <- function(dat,
     colnames(Pred.Probs) <- c("T1", "T2", "Est.F1", "Est.F2", "Est.F12")
   }
 
-  cat("\nDone!")
+  cat("Done!\n")
+  if (Corr.Test) {
+    cat("\nCorrelation test statistic is", res$rho.hat/sd(MC.rho), "corresponding to a p-value:", 1- abs(pnorm(res$rho.hat/sd(MC.rho))-0.5)*2)
+  }
 
   dev.new()
   layout(matrix(c(1,1,1, 2,2,3,3), nrow = 1))

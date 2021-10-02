@@ -20,7 +20,7 @@
 #' @examples
 #' SampleDat_case1 = SimDat_BiVarIntCensd(size = 400, case = 1, lambda1 = 0.45, lambda2 = 0.55, K.tau = 0.5,
 #'     T1.start= 0.1, T1.end = 4, T2.start = 0.1, T2.end = 4)
-#' SampleDat_case2 = SimDat_BiVarIntCensd(size = 100, case = 2, lambda1 = 0.45, lambda2 = 0.55, K.tau = 0.25,
+#' SampleDat_case2 = SimDat_BiVarIntCensd(size = 400, case = 2, lambda1 = 0.45, lambda2 = 0.55, K.tau = 0,
 #'     T1.start= 0.1, T1.end = 4, T2.start = 0.1, T2.end = 4)
 #' @export
 #'
