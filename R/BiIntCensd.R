@@ -25,6 +25,15 @@
 #'     Wu Y., Zhang, Y., & Zhou, J. \emph{Statistica Sinica Preprint No: SS-2019-0296}.
 #' @examples
 #' res = BiIntCensd(SampleDat_case2, Corr.Test = FALSE, pred.times = rbind(c(1,2), c(2,2.3)))
+#'
+#' # making 3d plot of joint distribution
+#' require(rgl)
+#' persp3d(res$F1.hat$T1, res$F2.hat$T2, res$F12.hat, xlab = 'T1', ylab = 'T2', zlab = 'F(T1, T2)',
+#' main='Joint CDF', col = "lightblue")
+#' if (!is.null(res$Pred.Probs)) {
+#'     points3d(res$Pred.Probs$T1, res$Pred.Probs$T2, res$Pred.Probs$Est.F12, col = "red", add = TRUE)
+#' }
+#'
 #' @import splines2 CVXR utils grDevices graphics
 #' @importFrom stats quantile rbinom rnorm runif
 #' @export
@@ -118,7 +127,7 @@ BiIntCensd <- function(dat,
               F12.hat    = F12.hat,
               F1.hat     = data.frame(T1 = T1.seq, F1.hat = F1.hat),
               F2.hat     = data.frame(T2 = T2.seq, F2.hat = F2.hat),
-              Pred.Probs = Pred.Probs
+              Pred.Probs = data.frame(Pred.Probs)
               )
          )
 }

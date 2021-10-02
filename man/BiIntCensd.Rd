@@ -51,6 +51,15 @@ This package provide a tookit which estimates the joint distribution function (a
 }
 \examples{
 res = BiIntCensd(SampleDat_case2, Corr.Test = FALSE, pred.times = rbind(c(1,2), c(2,2.3)))
+
+# making 3d plot of joint distribution
+require(rgl)
+persp3d(res$F1.hat$T1, res$F2.hat$T2, res$F12.hat, xlab = 'T1', ylab = 'T2', zlab = 'F(T1, T2)',
+main='Joint CDF', col = "lightblue")
+if (!is.null(res$Pred.Probs)) {
+    points3d(res$Pred.Probs$T1, res$Pred.Probs$T2, res$Pred.Probs$Est.F12, col = "red", add = TRUE)
+}
+
 }
 \references{
 Wu, Y., & Zhang, Y. (2012). Partially monotone tensor spline estimation of the joint distribution function with bivariate current status data. \emph{The Annals of Statistics, 40(3)}, 1609-1636.\cr \cr
