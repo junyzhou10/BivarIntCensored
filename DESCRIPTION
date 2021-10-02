@@ -1,0 +1,23 @@
+VignetteBuilder: knitr
+Package: BivarIntCensored
+Type: Package
+Title: Bivariate Interval Censored Data Analysis
+Version: 0.1.0
+Author: Junyi Zhou
+Maintainer: Junyi Zhou <junyzhou@iu.edu>
+Description: This package is designed to analyze the joint cumulative distribution function (CDF) with bivariate interval-censored event time data (no matter case 1 or case 2).
+    Both marginal and joint CDFs are estimated through a spline-based seive nonparametric maximum likelihood estimation (MLE) using I-splines.
+    The nonparametric test for the dependence between two interval-censored event times are included as well.
+    By providing the observation time, users can obtain the estimated probability of observing event, marginally or jointly.
+License: GPL (>= 2)
+Encoding: UTF-8
+LazyData: true
+Imports: splines2, CVXR, utils, grDevices, graphics, methods, MASS, ggplot2, plotly, stats
+Suggests:
+    roxygen2,
+    knitr
+Depends: 
+     R (>= 3.6.0)
+RoxygenNote: 7.1.1
+URL: https://github.com/junyzhou10/BivarIntCensored
+BugReports: https://github.com/junyzhou10/BivarIntCensored/issues
