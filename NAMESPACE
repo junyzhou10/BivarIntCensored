@@ -3,6 +3,7 @@
 export(BiIntCensd)
 export(SimDat_BiVarIntCensd)
 import(CVXR)
+import(foreach)
 import(grDevices)
 import(graphics)
 import(rgl)

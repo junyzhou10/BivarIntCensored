@@ -7,6 +7,8 @@
 #' @param int.k_2 Similar to int.k_1, just for outcome 2
 #' @param Corr.Test Whether the test of correlation between two outcomes should be conducted. Default is FALSE. If TRUE, bootstrap will be adopted to calculate \eqn{SE(\rho)}.
 #' @param nBootstrp Number of bootstrap samples
+#' @param seed Random seed for bootstrap
+#' @param parallel Parallel computing, default is TRUE. It is designed for speed up the correlation test. Does not have any effect when \code{Corr.Test == FALSE}
 #' @details \code{dat} should meet the following format: \cr
 #'     A list of two matrix with name 'T1' and 'T2'. Each one is a n x 3 matrix with first column for left boundaries of the observation interval, second column for right boundaries,
 #'     and third column for indicators of censoring type, in c("Left", "Right", "Interval"). If current status data, there is no "Interval".\cr\cr
@@ -24,9 +26,9 @@
 #' @references Wu, Y., & Zhang, Y. (2012). Partially monotone tensor spline estimation of the joint distribution function with bivariate current status data. \emph{The Annals of Statistics, 40(3)}, 1609-1636.\cr \cr
 #'     Wu Y., Zhang, Y., & Zhou, J. \emph{Statistica Sinica Preprint No: SS-2019-0296}.
 #' @examples
-#' res = BiIntCensd(SampleDat_case2,
+#' res = BiIntCensd(SampleDat_case1,
 #'                  Corr.Test = FALSE,
-#'                  pred.times = rbind(c(1,2), c(2,2.3))
+#'                  pred.times = rbind(c(1,2), c(2,2.5))
 #'                  )
 #'
 #' # making 3d plot of joint distribution
@@ -41,7 +43,20 @@
 #'     res$Pred.Probs$Est.F12, col = "red", add = TRUE)
 #' }
 #'
-#' @import splines2 CVXR utils grDevices graphics rgl
+#' ## If we want to conduct test for the correlation between two outcomes:
+#' \dontrun{
+#' if (Sys.info()["sysname"] == "Windows" ){
+#'   require(doParallel)
+#'   registerDoParallel(5)
+#' } else {
+#'   require(doMC)
+#'   registerDoMC(5)
+#' }
+#'
+#' res = BiIntCensd(SampleDat_case2,
+#'                  Corr.Test = TRUE)
+#'}
+#' @import splines2 CVXR utils grDevices graphics rgl foreach
 #' @importFrom stats quantile runif rbinom rnorm pnorm sd
 #' @export
 
@@ -51,7 +66,9 @@ BiIntCensd <- function(dat,
                        int.k_1 = NULL,
                        int.k_2 = NULL,
                        Corr.Test = FALSE,
-                       nBootstrp = 100) {
+                       nBootstrp = 100,
+                       seed = 12345,
+                       parallel = TRUE) {
 
   if (length(dat)==2) {
     T1  = dat[[1]]
@@ -64,6 +81,7 @@ BiIntCensd <- function(dat,
 
   T1 = dat_format(T1, 1)
   T2 = dat_format(T2, 2)
+  sample.size = nrow(T1)
   knot = get_knots(T1, T2, int.k_1=int.k_1, int.k_2=int.k_2)
   p_n  = length(knot$knot1)+l
   q_n  = length(knot$knot2)+l
@@ -76,17 +94,28 @@ BiIntCensd <- function(dat,
 
   MC.rho = NULL
   if (Corr.Test) {
-    cat("Bootstrapping: \n")
-    iter = 1
-    progress.ind <- rep(NA, times = nBootstrp)
-    progress.bar <- txtProgressBar(0, length(progress.ind), style = 3)
-    while (iter <= nBootstrp) {
-      setTxtProgressBar(progress.bar, iter)
-      boot.id = sample(nrow(T1), replace = T)
-      B.res   = OptLogLik(T1[boot.id,], T2[boot.id,], l = l, knot = knot, p_n = p_n, q_n = q_n)
-      MC.rho  = c(MC.rho, B.res$rho.hat)
-      iter    = iter+1
+    if (parallel) { # parallel computing
+      cat("Bootstrapping... \n")
+      # progress.bar <- txtProgressBar(0, nBootstrp, style = 3)
+      MC.rho = foreach(i = icount(nBootstrp), .combine = c) %dopar% {
+        boot.id = sample(sample.size, replace = T)
+        B.res   = OptLogLik(T1[boot.id,], T2[boot.id,], l = l, knot = knot, p_n = p_n, q_n = q_n)
+        # setTxtProgressBar(progress.bar, i)
+        return(B.res$rho.hat)
+      }
+    } else { # normal for loop
+      cat("Bootstrapping: \n")
+      iter = 1
+      progress.bar <- txtProgressBar(0, nBootstrp, style = 3)
+      while (iter <= nBootstrp) {
+        setTxtProgressBar(progress.bar, iter)
+        boot.id = sample(sample.size, replace = T)
+        B.res   = OptLogLik(T1[boot.id,], T2[boot.id,], l = l, knot = knot, p_n = p_n, q_n = q_n)
+        MC.rho  = c(MC.rho, B.res$rho.hat)
+        iter    = iter+1
+      }
     }
+
   }
 
   # estimated F1, F2, and F12.

@@ -11,7 +11,9 @@ BiIntCensd(
   int.k_1 = NULL,
   int.k_2 = NULL,
   Corr.Test = FALSE,
-  nBootstrp = 100
+  nBootstrp = 100,
+  seed = 12345,
+  parallel = TRUE
 )
 }
 \arguments{
@@ -28,6 +30,10 @@ BiIntCensd(
 \item{Corr.Test}{Whether the test of correlation between two outcomes should be conducted. Default is FALSE. If TRUE, bootstrap will be adopted to calculate \eqn{SE(\rho)}.}
 
 \item{nBootstrp}{Number of bootstrap samples}
+
+\item{seed}{Random seed for bootstrap}
+
+\item{parallel}{Parallel computing, default is TRUE. It is designed for speed up the correlation test. Does not have any effect when \code{Corr.Test == FALSE}}
 }
 \value{
 A list object including:
@@ -50,9 +56,9 @@ This package provide a tookit which estimates the joint distribution function (a
     Else -> "Interval" censored \cr
 }
 \examples{
-res = BiIntCensd(SampleDat_case2,
+res = BiIntCensd(SampleDat_case1,
                  Corr.Test = FALSE,
-                 pred.times = rbind(c(1,2), c(2,2.3))
+                 pred.times = rbind(c(1,2), c(2,2.5))
                  )
 
 # making 3d plot of joint distribution
@@ -67,6 +73,19 @@ if (!is.null(res$Pred.Probs)) {
     res$Pred.Probs$Est.F12, col = "red", add = TRUE)
 }
 
+## If we want to conduct test for the correlation between two outcomes:
+\dontrun{
+if (Sys.info()["sysname"] == "Windows" ){
+  require(doParallel)
+  registerDoParallel(5)
+} else {
+  require(doMC)
+  registerDoMC(5)
+}
+
+res = BiIntCensd(SampleDat_case2,
+                 Corr.Test = TRUE)
+}
 }
 \references{
 Wu, Y., & Zhang, Y. (2012). Partially monotone tensor spline estimation of the joint distribution function with bivariate current status data. \emph{The Annals of Statistics, 40(3)}, 1609-1636.\cr \cr
