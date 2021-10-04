@@ -13,7 +13,7 @@ devtools::install_github("junyzhou10/BivarIntCensored")
 ## Usage
 Use main function `BiIntCensd(dat, ...)` to conduct analysis. `dat` is a list containing two items with interval censored data. For details please check the helping documents.
 
-There are two sample simulated data in the package, namely `SampleDat_case1` and `SampleDat_case2`, where 'case1' has current status data for both outcomes and 'case2' has interval-censored data for both outcomes. Please feel free to play with the data (e.g., see examples in the helping document). Notably, this package supports the case that one outcome is current status data and the other is interval-censored data as well. 
+There are two simulated datasets in the package, namely `SampleDat_case1` and `SampleDat_case2`, where 'case1' has current status data for both outcomes and 'case2' has interval-censored data for both outcomes. Please feel free to play with the data (e.g., see examples in the helping document). Notably, this package supports the case that one outcome is current status data and the other is interval-censored data as well. 
 
 ## Outputs
 The outputs include **nonparametric test statistics** for the correlation between two outcomes as well as the **estimated NPMLE** of the I-spline coefficients. The **surface/curves** of joint and marginal CDF will be plotted automatically. If user provides the time points `[T1, T2]` for the prediction of probability of the events, the estimated marginal and joint CDF will be returned, indicating the chance of observing event marginally or jointly at the given time points.
