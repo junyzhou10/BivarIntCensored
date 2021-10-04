@@ -3,7 +3,7 @@
 #' @param dat Observed interval-censored data which can be either case 1 (current status data) or case 2 (interval censored data) for either outcome. See details.
 #' @param l Order of I-spline (degree + 1). The default is \code{l=4}
 #' @param pred.times Input times using format [T1, T2] to predict the probability of observing events marginally and jointly, i.e., [F1, F2, F12]. Multiple inputs of times are supported by providing a n x 2 matrix of times
-#' @param int.k_1 User specified positions of knots for outcome 1. If not specified, \eqn{N^{1/3}} knots will be chosen at quantiles
+#' @param int.k_1 User specified number of knots for outcome 1. If not specified, \eqn{N^{1/3}} knots will be chosen at quantiles
 #' @param int.k_2 Similar to int.k_1, just for outcome 2
 #' @param Corr.Test Whether the test of correlation between two outcomes should be conducted. Default is FALSE. If TRUE, bootstrap will be adopted to calculate \eqn{SE(\rho)}.
 #' @param nBootstrp Number of bootstrap samples

@@ -21,7 +21,7 @@ BiIntCensd(
 
 \item{pred.times}{Input times using format [T1, T2] to predict the probability of observing events marginally and jointly, i.e., [F1, F2, F12]. Multiple inputs of times are supported by providing a n x 2 matrix of times}
 
-\item{int.k_1}{User specified positions of knots for outcome 1. If not specified, \eqn{N^{1/3}} knots will be chosen at quantiles}
+\item{int.k_1}{User specified number of knots for outcome 1. If not specified, \eqn{N^{1/3}} knots will be chosen at quantiles}
 
 \item{int.k_2}{Similar to int.k_1, just for outcome 2}
 
