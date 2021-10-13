@@ -5,6 +5,10 @@
 #' @param pred.times Input times using format [T1, T2] to predict the probability of observing events marginally and jointly, i.e., [F1, F2, F12]. Multiple inputs of times are supported by providing a n x 2 matrix of times
 #' @param int.k_1 User specified number of knots for outcome 1. If not specified, \eqn{N^{1/3}} knots will be chosen at quantiles
 #' @param int.k_2 Similar to int.k_1, just for outcome 2
+#' @param t1_l (outcome 1) lower bound for nonparametric association test. Default is `NULL` which will automatically adopt \eqn{\tau_{1,l}}
+#' @param t1_h (outcome 1) upper bound for nonparametric association test. Default is `NULL` which will automatically adopt \eqn{\tau_{1,h}}
+#' @param t2_l (outcome 2) lower bound for nonparametric association test. Default is `NULL` which will automatically adopt \eqn{\tau_{2,l}}
+#' @param t2_h (outcome 2) upper bound for nonparametric association test. Default is `NULL` which will automatically adopt \eqn{\tau_{2,h}}
 #' @param Corr.Test Whether the test of correlation between two outcomes should be conducted. Default is FALSE. If TRUE, bootstrap will be adopted to calculate \eqn{SE(\rho)}.
 #' @param nBootstrp Number of bootstrap samples
 #' @param seed Random seed for bootstrap
@@ -65,6 +69,10 @@ BiIntCensd <- function(dat,
                        pred.times = NULL,
                        int.k_1 = NULL,
                        int.k_2 = NULL,
+                       t1_l = NULL,
+                       t1_h = NULL,
+                       t2_l = NULL,
+                       t2_h = NULL,
                        Corr.Test = FALSE,
                        nBootstrp = 100,
                        seed = 12345,
@@ -87,7 +95,8 @@ BiIntCensd <- function(dat,
   q_n  = length(knot$knot2)+l
 
 
-  res = OptLogLik(T1, T2, l = l, knot = knot, p_n = p_n, q_n = q_n)
+  res = OptLogLik(T1, T2, l = l, knot = knot, p_n = p_n, q_n = q_n,
+                  lower1 = t1_l, lower2 = t2_l, upper1 = t1_h, upper2 = t2_h)
   seive.M_ij = res$seive.M_ij
   seive.w_i  = res$seive.w_i
   seive.p_j  = res$seive.p_j
@@ -100,7 +109,8 @@ BiIntCensd <- function(dat,
       MC.rho = foreach(i = icount(nBootstrp), .combine = c) %dopar% {
         while (TRUE) {
           boot.id = sample(sample.size, replace = T)
-          B.res   = suppressWarnings(tryCatch(OptLogLik(T1[boot.id,], T2[boot.id,], l = l, knot = knot, p_n = p_n, q_n = q_n),
+          B.res   = suppressWarnings(tryCatch(OptLogLik(T1[boot.id,], T2[boot.id,], l = l, knot = knot, p_n = p_n, q_n = q_n,
+                                                        lower1 = t1_l, lower2 = t2_l, upper1 = t1_h, upper2 = t2_h),
                                               error=function(err) {NULL}))
           if (!is.null(B.res)) {
             break
@@ -116,7 +126,8 @@ BiIntCensd <- function(dat,
       while (iter <= nBootstrp) {
         setTxtProgressBar(progress.bar, iter)
         boot.id = sample(sample.size, replace = T)
-        B.res   = suppressWarnings(tryCatch(OptLogLik(T1[boot.id,], T2[boot.id,], l = l, knot = knot, p_n = p_n, q_n = q_n),
+        B.res   = suppressWarnings(tryCatch(OptLogLik(T1[boot.id,], T2[boot.id,], l = l, knot = knot, p_n = p_n, q_n = q_n,
+                                                      lower1 = t1_l, lower2 = t2_l, upper1 = t1_h, upper2 = t2_h),
                                             error=function(err) {NULL}))
         MC.rho  = c(MC.rho, B.res$rho.hat)
         if (!is.null(B.res)) {

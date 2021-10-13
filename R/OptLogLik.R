@@ -13,7 +13,7 @@
 #' \item{seive.p_j}{Seive MLE for p}
 #'
 
-OptLogLik <- function(T1, T2, l, knot, p_n, q_n) {
+OptLogLik <- function(T1, T2, l, knot, p_n, q_n, lower1, upper1, lower2, upper2) {
   # Generate I-spline data
   Is.u1 = suppressWarnings(iSpline(T1$tu_1, knots=knot$knot1, Boundary.knots=knot$boundary1, degree=l-2, intercept=T))
   Is.v1 = suppressWarnings(iSpline(T1$tv_1, knots=knot$knot1, Boundary.knots=knot$boundary1, degree=l-2, intercept=T))
@@ -133,11 +133,27 @@ OptLogLik <- function(T1, T2, l, knot, p_n, q_n) {
   seive.p_j  = CVXR_result$getValue(p); seive.p_j[seive.p_j<0] = 0
 
   # Integral interval (to calculate rho)
-  alpha  = 0.01
-  upper1 = quantile(c(T1$tu_1[T1$tu_1 != 0], T1$tv_1[is.finite(T1$tv_1)]), 1-alpha)
-  lower1 = quantile(c(T1$tu_1[T1$tu_1 != 0], T1$tv_1[is.finite(T1$tv_1)]), alpha)
-  upper2 = quantile(c(T2$tu_2[T2$tu_2 != 0], T2$tv_2[is.finite(T2$tv_2)]), 1-alpha)
-  lower2 = quantile(c(T2$tu_2[T2$tu_2 != 0], T2$tv_2[is.finite(T2$tv_2)]), alpha)
+  if (is.null(lower1)) {
+    lower1 = min(T1$tu_1[T1$tu_1 != 0])
+  }
+
+  if (is.null(lower2)) {
+    lower2 = min(T2$tu_2[T2$tu_2 != 0])
+  }
+
+  if (is.null(upper1)) {
+    upper1 = max(T1$tv_1[is.finite(T1$tv_1)])
+  }
+
+  if (is.null(upper2)) {
+    upper2 = max(T2$tv_2[is.finite(T2$tv_2)])
+  }
+
+  # alpha  = 0.01
+  # upper1 = quantile(c(T1$tu_1[T1$tu_1 != 0], T1$tv_1[is.finite(T1$tv_1)]), 1-alpha)
+  # lower1 = quantile(c(T1$tu_1[T1$tu_1 != 0], T1$tv_1[is.finite(T1$tv_1)]), alpha)
+  # upper2 = quantile(c(T2$tu_2[T2$tu_2 != 0], T2$tv_2[is.finite(T2$tv_2)]), 1-alpha)
+  # lower2 = quantile(c(T2$tu_2[T2$tu_2 != 0], T2$tv_2[is.finite(T2$tv_2)]), alpha)
   # Integration & rho.hat:
   int.BS1 = ibs(upper1, knots=knot$knot1, Boundary.knots=knot$boundary1, degree=l-1, intercept=T) -
     ibs(lower1, knots=knot$knot1, Boundary.knots=knot$boundary1, degree=l-1, intercept=T)
