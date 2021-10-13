@@ -20,7 +20,7 @@ OptLogLik <- function(T1, T2, l, knot, p_n, q_n) {
   Is.u2 = suppressWarnings(iSpline(T2$tu_2, knots=knot$knot2, Boundary.knots=knot$boundary2, degree=l-2, intercept=T))
   Is.v2 = suppressWarnings(iSpline(T2$tv_2, knots=knot$knot2, Boundary.knots=knot$boundary2, degree=l-2, intercept=T))
 
-  LogLikCase2 <- function(Mu, w, p) {
+  LogLikBivar <- function(Mu, w, p) {
     # Part 1: both left censoring
     I11 = T1$Ind_1=="Left" & T2$Ind_2=="Left"
     if (sum(I11)==0) {
@@ -73,7 +73,7 @@ OptLogLik <- function(T1, T2, l, knot, p_n, q_n) {
       V1  = Is.v1[I22,,drop = FALSE]
       U2  = Is.u2[I22,,drop = FALSE]
       V2  = Is.v2[I22,,drop = FALSE]
-      M5  = sum(log(diag(V1%*%Mu%*%t(V2-U2) + U1%*%Mu%*%t(U2-V2))))
+      M5  = sum(log(diag( (V1-U1)%*%Mu%*%t(V2-U2) )))
     }
 
     # Part 6: Interval & Right
@@ -125,9 +125,9 @@ OptLogLik <- function(T1, T2, l, knot, p_n, q_n) {
   w  = CVXR::Variable(p_n-1)
   p  = CVXR::Variable(q_n-1)
   # define log-likelihood function that need to be optimized
-  objective <- Minimize(-LogLikCase2(Mu, w, p))
-  prob <- Problem(objective, list(Mu >= 0, w>=0, p>=0, sum(Mu)+sum(w)+sum(p) - 1 <= 0 ))
-  CVXR_result <- solve(prob)
+  objective <- Minimize(-LogLikBivar(Mu, w, p))
+  Opt.Problem <- Problem(objective, list(Mu >= 0, w>=0, p>=0, sum(Mu)+sum(w)+sum(p) - 1 <= 0 ))
+  CVXR_result <- solve(Opt.Problem)
   seive.M_ij = CVXR_result$getValue(Mu); seive.M_ij[which(seive.M_ij<0,arr.ind = T)] = 0
   seive.w_i  = CVXR_result$getValue(w); seive.w_i[seive.w_i<0] = 0
   seive.p_j  = CVXR_result$getValue(p); seive.p_j[seive.p_j<0] = 0

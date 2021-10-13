@@ -98,8 +98,14 @@ BiIntCensd <- function(dat,
       cat("Bootstrapping... \n")
       # progress.bar <- txtProgressBar(0, nBootstrp, style = 3)
       MC.rho = foreach(i = icount(nBootstrp), .combine = c) %dopar% {
-        boot.id = sample(sample.size, replace = T)
-        B.res   = OptLogLik(T1[boot.id,], T2[boot.id,], l = l, knot = knot, p_n = p_n, q_n = q_n)
+        while (TRUE) {
+          boot.id = sample(sample.size, replace = T)
+          B.res   = suppressWarnings(tryCatch(OptLogLik(T1[boot.id,], T2[boot.id,], l = l, knot = knot, p_n = p_n, q_n = q_n),
+                                              error=function(err) {NULL}))
+          if (!is.null(B.res)) {
+            break
+          }
+        }
         # setTxtProgressBar(progress.bar, i)
         return(B.res$rho.hat)
       }
@@ -110,9 +116,12 @@ BiIntCensd <- function(dat,
       while (iter <= nBootstrp) {
         setTxtProgressBar(progress.bar, iter)
         boot.id = sample(sample.size, replace = T)
-        B.res   = OptLogLik(T1[boot.id,], T2[boot.id,], l = l, knot = knot, p_n = p_n, q_n = q_n)
+        B.res   = suppressWarnings(tryCatch(OptLogLik(T1[boot.id,], T2[boot.id,], l = l, knot = knot, p_n = p_n, q_n = q_n),
+                                            error=function(err) {NULL}))
         MC.rho  = c(MC.rho, B.res$rho.hat)
-        iter    = iter+1
+        if (!is.null(B.res)) {
+          iter    = iter+1
+        }
       }
     }
 

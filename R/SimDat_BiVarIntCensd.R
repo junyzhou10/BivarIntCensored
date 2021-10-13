@@ -27,7 +27,6 @@
 
 SimDat_BiVarIntCensd <- function(size, case = 2, lambda1, lambda2, K.tau, T1.start, T1.end, T2.start, T2.end, seed = 123){
   set.seed(seed)
-  #window.generate.method=1: simple way. if else, then use a complex one
   theta = 2*K.tau/(1-K.tau)
   u = runif(size)
   z = runif(size)
