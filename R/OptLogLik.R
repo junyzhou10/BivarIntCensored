@@ -6,6 +6,10 @@
 #' @param knot Knot positions for the I-spines
 #' @param p_n Number of parameters corresponding to the I-spline basis (for outcome 1)
 #' @param q_n Number of parameters corresponding to the I-spline basis (for outcome 2)
+#' @param lower1 t1_l
+#' @param upper1 t1_h
+#' @param lower2 t2_l
+#' @param upper2 t2_h
 #' @return A list of outcomes including the
 #' \item{rho}{estimated \eqn{\rho} indicating the correlations between two outcomes}
 #' \item{seive.M_ij}{Seive MLE for Mu}

@@ -4,7 +4,7 @@
 \alias{OptLogLik}
 \title{OptLogLik (not for call)}
 \usage{
-OptLogLik(T1, T2, l, knot, p_n, q_n)
+OptLogLik(T1, T2, l, knot, p_n, q_n, lower1, upper1, lower2, upper2)
 }
 \arguments{
 \item{T1}{Observed intervals for outcome 1}
@@ -18,6 +18,14 @@ OptLogLik(T1, T2, l, knot, p_n, q_n)
 \item{p_n}{Number of parameters corresponding to the I-spline basis (for outcome 1)}
 
 \item{q_n}{Number of parameters corresponding to the I-spline basis (for outcome 2)}
+
+\item{lower1}{t1_l}
+
+\item{upper1}{t1_h}
+
+\item{lower2}{t2_l}
+
+\item{upper2}{t2_h}
 }
 \value{
 A list of outcomes including the

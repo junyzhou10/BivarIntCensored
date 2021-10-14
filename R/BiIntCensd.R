@@ -5,10 +5,10 @@
 #' @param pred.times Input times using format [T1, T2] to predict the probability of observing events marginally and jointly, i.e., [F1, F2, F12]. Multiple inputs of times are supported by providing a n x 2 matrix of times
 #' @param int.k_1 User specified number of knots for outcome 1. If not specified, \eqn{N^{1/3}} knots will be chosen at quantiles
 #' @param int.k_2 Similar to int.k_1, just for outcome 2
-#' @param t1_l (outcome 1) lower bound for nonparametric association test. Default is `NULL` which will automatically adopt \eqn{\tau_{1,l}}
-#' @param t1_h (outcome 1) upper bound for nonparametric association test. Default is `NULL` which will automatically adopt \eqn{\tau_{1,h}}
-#' @param t2_l (outcome 2) lower bound for nonparametric association test. Default is `NULL` which will automatically adopt \eqn{\tau_{2,l}}
-#' @param t2_h (outcome 2) upper bound for nonparametric association test. Default is `NULL` which will automatically adopt \eqn{\tau_{2,h}}
+#' @param t1_l (outcome 1) lower bound for nonparametric association test. Default is \code{NULL} which will automatically adopt \eqn{\tau_{1,l}}. See details.
+#' @param t1_h (outcome 1) upper bound for nonparametric association test. Default is \code{NULL} which will automatically adopt \eqn{\tau_{1,h}}
+#' @param t2_l (outcome 2) lower bound for nonparametric association test. Default is \code{NULL} which will automatically adopt \eqn{\tau_{2,l}}
+#' @param t2_h (outcome 2) upper bound for nonparametric association test. Default is \code{NULL} which will automatically adopt \eqn{\tau_{2,h}}
 #' @param Corr.Test Whether the test of correlation between two outcomes should be conducted. Default is FALSE. If TRUE, bootstrap will be adopted to calculate \eqn{SE(\rho)}.
 #' @param nBootstrp Number of bootstrap samples
 #' @param seed Random seed for bootstrap
@@ -20,6 +20,11 @@
 #'     If T1==0 -> "Left" censored \cr
 #'     If is.infinite(T2) -> "Right" censored \cr
 #'     Else -> "Interval" censored \cr
+#'     \cr
+#'     The nonparametric association test is written as
+#'     \deqn{\rho(\hat{\boldsymbol\theta}_n) = \int_{t_{1,l}}^{t_{1,h}}\int_{t_{2,l}}^{t_{2,h}}\left\{\hat F_{n,0}(t_1, t_2) - \hat F_{n,1}(t_1)\hat F_{n,2}(t_2)\right\}dt_2dt_1}
+#'     where event times \eqn{(t_1, t_2) \in [\tau_{1,l},\tau_{1,h}]\times[\tau_{2,l},\tau_{2,h}]}.
+#'     By specifying \code{t1_l}, \code{t1_h}, \code{t2_l}, and \code{t2_h}, user could test independence of event times at any region.
 #' @return A list object including:
 #' \item{rho.hat}{The estimated \eqn{\rho}, implies the correlation between two outcomes. See reference papers for more details}
 #' \item{MC.rho}{If \code{Corr.Test = TRUE}, it yields a vector of all estimated \eqn{\rho} from bootstraps}

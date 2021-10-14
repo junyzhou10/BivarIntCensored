@@ -10,6 +10,10 @@ BiIntCensd(
   pred.times = NULL,
   int.k_1 = NULL,
   int.k_2 = NULL,
+  t1_l = NULL,
+  t1_h = NULL,
+  t2_l = NULL,
+  t2_h = NULL,
   Corr.Test = FALSE,
   nBootstrp = 100,
   seed = 12345,
@@ -26,6 +30,14 @@ BiIntCensd(
 \item{int.k_1}{User specified number of knots for outcome 1. If not specified, \eqn{N^{1/3}} knots will be chosen at quantiles}
 
 \item{int.k_2}{Similar to int.k_1, just for outcome 2}
+
+\item{t1_l}{(outcome 1) lower bound for nonparametric association test. Default is \code{NULL} which will automatically adopt \eqn{\tau_{1,l}}. See details.}
+
+\item{t1_h}{(outcome 1) upper bound for nonparametric association test. Default is \code{NULL} which will automatically adopt \eqn{\tau_{1,h}}}
+
+\item{t2_l}{(outcome 2) lower bound for nonparametric association test. Default is \code{NULL} which will automatically adopt \eqn{\tau_{2,l}}}
+
+\item{t2_h}{(outcome 2) upper bound for nonparametric association test. Default is \code{NULL} which will automatically adopt \eqn{\tau_{2,h}}}
 
 \item{Corr.Test}{Whether the test of correlation between two outcomes should be conducted. Default is FALSE. If TRUE, bootstrap will be adopted to calculate \eqn{SE(\rho)}.}
 
@@ -54,6 +66,11 @@ This package provide a tookit which estimates the joint distribution function (a
     If T1==0 -> "Left" censored \cr
     If is.infinite(T2) -> "Right" censored \cr
     Else -> "Interval" censored \cr
+    \cr
+    The nonparametric association test is written as
+    \deqn{\rho(\hat{\boldsymbol\theta}_n) = \int_{t_{1,l}}^{t_{1,h}}\int_{t_{2,l}}^{t_{2,h}}\left\{\hat F_{n,0}(t_1, t_2) - \hat F_{n,1}(t_1)\hat F_{n,2}(t_2)\right\}dt_2dt_1}
+    where event times \eqn{(t_1, t_2) \in [\tau_{1,l},\tau_{1,h}]\times[\tau_{2,l},\tau_{2,h}]}.
+    By specifying \code{t1_l}, \code{t1_h}, \code{t2_l}, and \code{t2_h}, user could test independence of event times at any region.
 }
 \examples{
 res = BiIntCensd(SampleDat_case1,
