@@ -108,6 +108,7 @@ BiIntCensd <- function(dat,
 
   MC.rho = NULL
   if (Corr.Test) {
+    set.seed(seed)
     if (parallel) { # parallel computing
       cat("Bootstrapping... \n")
       # progress.bar <- txtProgressBar(0, nBootstrp, style = 3)
