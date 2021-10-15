@@ -174,7 +174,7 @@ BiIntCensd <- function(dat,
 
   cat("Done!\n")
   if (Corr.Test) {
-    cat("\nCorrelation test statistic is", res$rho.hat/sd(MC.rho), "corresponding to a p-value:", 1- abs(pnorm(res$rho.hat/sd(MC.rho))-0.5)*2)
+    cat("\nCorrelation test statistic is", round(res$rho.hat/sd(MC.rho), 4), "corresponding to a p-value:", round(1-abs(pnorm(res$rho.hat/sd(MC.rho))-0.5)*2, 4))
   }
 
   dev.new()
