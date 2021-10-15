@@ -181,7 +181,7 @@ BiIntCensd <- function(dat,
   layout(matrix(c(1,1,1, 2,2,3,3), nrow = 1))
   persp(T1.seq, T2.seq, F12.hat, xlab = 'T1', ylab = 'T2', zlab = 'F(T1, T2)', main='Joint CDF', theta = -35, phi = 20, ticktype = 'detailed')
   plot(T1.seq, F1.hat, col = "black",ylim = c(0,1), type = "l", lwd = 2,  xlab = "T1", ylab = "F(T1)", main = 'Marginal CDF of event 1')
-  plot(T2.seq, F2.hat, col = "black",ylim = c(0,1), type = "l",lwd = 2, xlab = "T1", ylab = "F(T2)", main = 'Marginal CDF of event 2')
+  plot(T2.seq, F2.hat, col = "black",ylim = c(0,1), type = "l",lwd = 2, xlab = "T2", ylab = "F(T2)", main = 'Marginal CDF of event 2')
 
   return(list(rho.hat    = res$rho.hat,
               MC.rho     = MC.rho,
