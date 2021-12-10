@@ -99,7 +99,6 @@ BiIntCensd <- function(dat,
   p_n  = length(knot$knot1)+l
   q_n  = length(knot$knot2)+l
 
-
   res = OptLogLik(T1, T2, l = l, knot = knot, p_n = p_n, q_n = q_n,
                   lower1 = t1_l, lower2 = t2_l, upper1 = t1_h, upper2 = t2_h)
   seive.M_ij = res$seive.M_ij
