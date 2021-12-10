@@ -174,9 +174,11 @@ BiIntCensd <- function(dat,
   }
 
   cat("Done!\n")
+  p.val = NULL
   if (Corr.Test) {
+    p.val = 1-abs(pnorm(res$rho.hat/sd(MC.rho))-0.5)*2
     cat("\nThe test statistic for association:", round(res$rho.hat/sd(MC.rho), 4), "\n")
-    cat("p-value:", round(1-abs(pnorm(res$rho.hat/sd(MC.rho))-0.5)*2, 4), "\n")
+    cat("p-value:", round(p.val, 4), "\n")
   }
 
   dev.new()
@@ -187,6 +189,7 @@ BiIntCensd <- function(dat,
 
   return(list(rho.hat    = res$rho.hat,
               MC.rho     = MC.rho,
+              p.val      = p.val,
               seive.M_ij =seive.M_ij,
               seive.w_i  =seive.w_i,
               seive.p_j  =seive.p_j,
