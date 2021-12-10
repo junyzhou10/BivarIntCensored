@@ -110,7 +110,7 @@ BiIntCensd <- function(dat,
   if (Corr.Test) {
     set.seed(seed)
     if (parallel) { # parallel computing
-      cat("Bootstrapping... \n")
+      cat("Bootstrapping with", nBootstrp , "samples... \n")
       # progress.bar <- txtProgressBar(0, nBootstrp, style = 3)
       MC.rho = foreach(i = icount(nBootstrp), .combine = c) %dopar% {
         while (TRUE) {
@@ -175,7 +175,8 @@ BiIntCensd <- function(dat,
 
   cat("Done!\n")
   if (Corr.Test) {
-    cat("\nCorrelation test statistic is", round(res$rho.hat/sd(MC.rho), 4), "corresponding to a p-value:", round(1-abs(pnorm(res$rho.hat/sd(MC.rho))-0.5)*2, 4))
+    cat("\nThe test statistic for association:", round(res$rho.hat/sd(MC.rho), 4), "\n")
+    cat("p-value:", round(1-abs(pnorm(res$rho.hat/sd(MC.rho))-0.5)*2, 4), "\n")
   }
 
   dev.new()
