@@ -14,9 +14,9 @@
 #' @param seed Random seed for bootstrap
 #' @param parallel Parallel computing, default is TRUE. It is designed for speed up the correlation test. Does not have any effect when \code{Corr.Test == FALSE}
 #' @details \code{dat} should meet the following format: \cr
-#'     A list of two matrix with name 'T1' and 'T2'. Each one is a n x 3 matrix with first column for left boundaries of the observation interval, second column for right boundaries,
-#'     and third column for indicators of censoring type, in c("Left", "Right", "Interval"). If current status data, there is no "Interval".\cr\cr
-#'     Notice: If there are only two columns provided, the package assumes that they are for interval times [T1, T2] and the indicators will be generated automatically following the rule: \cr \cr
+#'     A table of a n x 4 matrix where each column corresponds to \code{(tu_1, tv_1, tu_2, tv_2)}. tu_ stands for the left boundaries of the observation interval, while tv_ stands for right boundaries.
+#'     \cr\cr
+#'     Notice: Censoring types are embedded in \code{dat} with the following the rule: \cr \cr
 #'     If T1==0 -> "Left" censored \cr
 #'     If is.infinite(T2) -> "Right" censored \cr
 #'     Else -> "Interval" censored \cr
@@ -83,17 +83,12 @@ BiIntCensd <- function(dat,
                        seed = 12345,
                        parallel = TRUE) {
 
-  if (length(dat)==2) {
-    T1  = dat[[1]]
-    T2  = dat[[2]]
-  } else if (length(dat)<2){
+  if (ncol(dat) != 4) {
     stop("No enough data in `dat`! Please check the Help document.")
-  } else {
-    warning("More than two elements in `dat`, only first two are used!")
   }
 
-  T1 = dat_format(T1, 1)
-  T2 = dat_format(T2, 2)
+  T1 = dat_format(dat[,c(1,2)], 1)
+  T2 = dat_format(dat[,c(3,4)], 2)
   sample.size = nrow(T1)
   knot = get_knots(T1, T2, int.k_1=int.k_1, int.k_2=int.k_2)
   p_n  = length(knot$knot1)+l

@@ -1,8 +1,8 @@
 #' @title Format the input data
 #' @param Ti Data from one outcome
 #' @details See Detail section for \code{BiIntCensd}
-#' @return A formatted data
-#' @noRd
+#' @return A formatted data with censoring type indicators
+
 
 dat_format <- function(Ti, ni) {
   Ti <- as.data.frame(Ti)

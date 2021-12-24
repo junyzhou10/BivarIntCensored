@@ -115,5 +115,5 @@ SimDat_BiVarIntCensd <- function(size, case = 2, lambda1, lambda2, K.tau, T1.sta
   }
 
 
-  return(list("T1"=UV_1, "T2"= UV_2))
+  return(cbind(UV_1[,-3], UV_2[,-3]))
 }
