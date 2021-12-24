@@ -8,6 +8,8 @@ dat_format(Ti, ni)
 }
 \arguments{
 \item{Ti}{Data from one outcome}
+
+\item{ni}{Naming the outcome number, i.e., return the column names as tu/tv_<ni>}
 }
 \value{
 A formatted data with censoring type indicators

@@ -1,8 +1,9 @@
 #' @title Format the input data
 #' @param Ti Data from one outcome
+#' @param ni Naming the outcome number, i.e., return the column names as tu/tv_<ni>
 #' @details See Detail section for \code{BiIntCensd}
 #' @return A formatted data with censoring type indicators
-
+#' @export
 
 dat_format <- function(Ti, ni) {
   Ti <- as.data.frame(Ti)
