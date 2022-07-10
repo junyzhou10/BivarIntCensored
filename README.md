@@ -2,7 +2,7 @@
 
 The analysis of the joint cumulative distribution function (CDF) with bivariate event time data is a challenging problem. This package provides a user-friendly toolkit that estimates the joint CDF for bivariate interval-censored data (also current status data) through spline-based seive nonparametric maximum likelihood estimators (NPMLE). Besides, a nonparametric correlation test is provided to check whether two outcomes are correlated or not.
 
-> The theoretical guarantee and statistical properties of the method can be found in papers [*A spline-based nonparametric analysis for interval-censored bivariate survival data*](http://www3.stat.sinica.edu.tw/ss_newpaper/SS-2019-0296_na.pdf) and [*Partially monotone tensor spline estimation of the joint distribution function with bivariate current status data*](https://projecteuclid.org/journals/annals-of-statistics/volume-40/issue-3/Partially-monotone-tensor-spline-estimation-of-the-joint-distribution-function/10.1214/12-AOS1016.full).
+> The theoretical guarantee and statistical properties of the method can be found in papers [*A spline-based nonparametric analysis for interval-censored bivariate survival data*](http://www3.stat.sinica.edu.tw/statistica/J32N3/j32n316/j32n316.html) and [*Partially monotone tensor spline estimation of the joint distribution function with bivariate current status data*](https://projecteuclid.org/journals/annals-of-statistics/volume-40/issue-3/Partially-monotone-tensor-spline-estimation-of-the-joint-distribution-function/10.1214/12-AOS1016.full).
 
 ## Installation
 To install the package: 
